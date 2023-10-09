@@ -33,20 +33,43 @@ public:
         else return buscar(x->dir);
     }
 
-    Node* min(Node* x) 
+    Node* min(Node* x) // Assume que x é diferente de NULO 
     {
         while (x->esq != nullptr) x = x->esq;
         return x;
     }
 
-    Node* max(Node* x)
+    Node* max(Node* x) // Assume que x é diferente de NULO
     {
         while (x->dir != nullptr) x = x->dir;
         return x;
     }
 
-    Node* sucessor();
-    Node* predecessor();
+    Node* sucessor(Node* x) // Assume que x é diferente de NULO
+    {
+        if (x->dir != nullptr) return min(x->dir);
+        
+        Node* y = x->pai;
+        while (y != nullptr and x == y->dir)
+        {
+            x = y;
+            y = y->pai;
+        }
+        return y;
+    }
+
+    Node* predecessor(Node* x)
+    {
+        if (x->esq != nullptr) return max(x->esq);
+
+        Node* y = x->pai;
+        while (y != nullptr and x == y->esq)
+        {
+            x = y;
+            y = y->pai;
+        }
+        return y;
+    }
     
     void incluir();
     void remover();
