@@ -71,7 +71,29 @@ public:
         return y;
     }
     
-    void incluir();
+    void incluir(Node* z)
+    {
+        Node* y = nullptr;
+        Node* x = raiz;
+
+        while (x != nullptr)
+        {
+            y = x;
+            if (z->chave < x->chave) 
+                x = x->esq;
+            else 
+                x = x->dir;
+        }
+
+        z->pai = y;
+        if (y == nullptr) 
+            raiz = z;
+        else if (z->chave < y->chave) 
+            y->esq = z;
+        else 
+            y->dir = z;
+    }
+
     void remover();
 };
 
