@@ -12,7 +12,17 @@ public:
     ABB() : raiz{nullptr} {}
     ~ABB() {}
 
-    void emOrdem();
+    void visitar(Node* x) {}
+
+    void emOrdem(Node* x) 
+    {
+        if (x != nullptr)
+        {
+            emOrdem(x->esq);
+            visitar(x);
+            emOrdem(x->dir);
+        }
+    }
 
     Node* buscar();
     Node* min();
