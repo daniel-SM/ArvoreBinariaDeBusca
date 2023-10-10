@@ -94,7 +94,22 @@ public:
             y->dir = z;
     }
 
-    void remover();
+    void transplantar (Node* u, Node* v) 
+    {
+        if (u->pai == nullptr) 
+            raiz = v;
+        else if (u == u->pai->esq ) 
+            u->pai->esq = v;
+        else 
+            u->pai->dir = v;
+
+        if (v != nullptr) v->pai = u->pai;
+    }
+
+    void remover()
+    {
+        
+    }
 };
 
 
