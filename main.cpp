@@ -106,8 +106,29 @@ public:
         if (v != nullptr) v->pai = u->pai;
     }
 
-    void remover()
+    void remover(Node* z)
     {
+        if (z->esq == nullptr)
+        {
+            transplantar(z, z->dir);
+        }
+        else if (z->dir == nullptr)
+        {
+            transplantar(z, z->esq);
+        }
+        else
+        {
+            Node* y = min(z->dir);
+            if (y->pai != z)
+            {
+                transplantar(y, y->dir);
+                y->dir = z->dir;
+                z->dir->pai = y;
+            }
+            transplantar(z, y);
+            y->esq = z->esq;
+            z->esq->pai = y;
+        }
         
     }
 };
