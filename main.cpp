@@ -1,3 +1,5 @@
+#include <iostream>
+
 template <typename T>
 class ABB
 {
@@ -11,9 +13,20 @@ private:
 
 public:
     ABB() : raiz{nullptr} {}
-    ~ABB() {}
 
-    void visitar(Node* x) {}
+    void desalocar (Node* x) 
+    {
+        if (x != nullptr)
+        {
+            desalocar(x->esq);
+            desalocar(x->dir);
+            delete x;
+        }
+    } 
+
+    ~ABB() { desalocar(raiz);}
+
+    void visitar(Node* x) { std::cout << "Chave: " << x->chave << "\n"; }
 
     void emOrdem(Node* x) 
     {
@@ -25,12 +38,12 @@ public:
         }
     }
 
-    Node* buscar(Node* x, T k)
+    Node* buscar (Node* x, T k)
     {
         if (x == nullptr or k == x->chave) return x;
 
-        if (k < x->chave) return buscar(x->esq); 
-        else return buscar(x->dir);
+        if (k < x->chave) return buscar(x->esq, k); 
+        else return buscar(x->dir, k);
     }
 
     Node* min(Node* x) // Assume que x é diferente de NULO 
@@ -92,6 +105,9 @@ public:
             y->esq = z;
         else 
             y->dir = z;
+        
+        z->esq = nullptr;
+        z->dir = nullptr;
     }
 
     void transplantar (Node* u, Node* v) 
@@ -129,12 +145,63 @@ public:
             y->esq = z->esq;
             z->esq->pai = y;
         }
-        
+    }
+
+    // Função auxiliar que chama emOrdem() a partir da raiz
+    void percurso () 
+    {
+        emOrdem(raiz);
+    }
+
+    // Função auxiliar que chama buscar() a partir da raiz
+    Node* busca (T k) 
+    {
+        return buscar(raiz, k);
+    }
+
+    // Função auxiliar que aloca novo nó e chama incluir() para ele
+    void insercao (T k) 
+    {
+        Node* z = new Node;
+        z->chave = k;
+        incluir(z);
+    }
+
+    // Função auxiliar que encontra nó com chave k e remove da árvore
+    void remocao(T k) 
+    {
+        Node* z = busca(k);
+        if (z != nullptr) remover(z);
     }
 };
 
 
 int main () 
 {
+    ABB<int> arvore;
+
+    // Testando inclusão
+    arvore.insercao(10);
+    arvore.insercao(12);
+    arvore.insercao(11);
+    arvore.insercao(9);
+    arvore.insercao(6);
+    // OK
+
+    // Testando busca
+    std::cout << "Buscando: " << arvore.busca(6)->chave << "\n";
+    std::cout << "Buscando: " << arvore.busca(9)->chave << "\n";
+    std::cout << "Buscando: " << arvore.busca(10)->chave << "\n";
+    std::cout << "Buscando: " << arvore.busca(11)->chave << "\n";
+    std::cout << "Buscando: " << arvore.busca(12)->chave << "\n";
+    // OK
+
+    // Testando remoção 
+    arvore.remocao(10);
+    arvore.remocao(6);
+
+    // Testando percurso em ordem na árvore
+    arvore.percurso();
+
     return 0;
 }
